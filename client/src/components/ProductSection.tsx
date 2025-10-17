@@ -1,19 +1,7 @@
 import ProductCard from "./ProductCard";
 import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface Product {
-  id: number;
-  name: string;
-  image: string;
-  price: number;
-  originalPrice?: number;
-  rating: number;
-  reviews: number;
-  inStock: boolean;
-  badge?: string;
-  badgeVariant?: "default" | "destructive";
-}
+import type { Product } from "@shared/schema";
 
 interface ProductSectionProps {
   title: string;
@@ -41,7 +29,19 @@ export default function ProductSection({ title, products, onViewAll }: ProductSe
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {products.map((product) => (
-          <ProductCard key={product.id} {...product} />
+          <ProductCard
+            key={product.id}
+            id={parseInt(product.id)}
+            name={product.name}
+            image={product.image}
+            price={parseFloat(product.price)}
+            originalPrice={product.originalPrice ? parseFloat(product.originalPrice) : undefined}
+            rating={product.rating ? parseFloat(product.rating) : 0}
+            reviews={product.reviewCount || 0}
+            inStock={product.stock > 0}
+            badge={product.isOnSale ? "SALE" : product.isNew ? "NEW" : undefined}
+            badgeVariant={product.isOnSale ? "destructive" : "default"}
+          />
         ))}
       </div>
     </div>

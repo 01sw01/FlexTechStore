@@ -10,6 +10,7 @@ import CategoryPage from "@/pages/CategoryPage";
 import Deals from "@/pages/Deals";
 import Favorites from "@/pages/Favorites";
 import Contact from "@/pages/Contact";
+import OrderTracking from "@/pages/OrderTracking";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -22,6 +23,7 @@ function Router() {
       <Route path="/deals" component={Deals} />
       <Route path="/favorites" component={Favorites} />
       <Route path="/contact" component={Contact} />
+      <Route path="/orders" component={OrderTracking} />
       <Route component={NotFound} />
     </Switch>
   );
