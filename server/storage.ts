@@ -98,7 +98,9 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
     const user: User = { 
-      ...insertUser, 
+      ...insertUser,
+      firstName: insertUser.firstName ?? null,
+      lastName: insertUser.lastName ?? null,
       id,
       createdAt: new Date()
     };
@@ -174,7 +176,16 @@ export class MemStorage implements IStorage {
   async createProduct(insertProduct: InsertProduct): Promise<Product> {
     const id = randomUUID();
     const product: Product = { 
-      ...insertProduct, 
+      ...insertProduct,
+      description: insertProduct.description ?? null,
+      longDescription: insertProduct.longDescription ?? null,
+      brand: insertProduct.brand ?? null,
+      model: insertProduct.model ?? null,
+      originalPrice: insertProduct.originalPrice ?? null,
+      images: insertProduct.images ?? null,
+      rating: insertProduct.rating ?? null,
+      specifications: insertProduct.specifications ?? null,
+      features: insertProduct.features ?? null,
       id,
       createdAt: new Date()
     };
@@ -196,7 +207,13 @@ export class MemStorage implements IStorage {
 
   async createCategory(insertCategory: InsertCategory): Promise<Category> {
     const id = randomUUID();
-    const category: Category = { ...insertCategory, id };
+    const category: Category = { 
+      ...insertCategory,
+      description: insertCategory.description ?? null,
+      image: insertCategory.image ?? null,
+      parentId: insertCategory.parentId ?? null,
+      id 
+    };
     this.categories.set(id, category);
     return category;
   }
@@ -211,14 +228,15 @@ export class MemStorage implements IStorage {
     );
     
     if (existing) {
-      existing.quantity += insertCartItem.quantity;
+      existing.quantity += (insertCartItem.quantity ?? 1);
       this.cartItems.set(existing.id, existing);
       return existing;
     }
     
     const id = randomUUID();
     const cartItem: CartItem = { 
-      ...insertCartItem, 
+      ...insertCartItem,
+      quantity: insertCartItem.quantity ?? 1,
       id,
       createdAt: new Date()
     };
