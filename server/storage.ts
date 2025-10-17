@@ -183,9 +183,15 @@ export class MemStorage implements IStorage {
       model: insertProduct.model ?? null,
       originalPrice: insertProduct.originalPrice ?? null,
       images: insertProduct.images ?? null,
+      inStock: insertProduct.inStock ?? true,
+      stockQuantity: insertProduct.stockQuantity ?? 0,
       rating: insertProduct.rating ?? null,
+      reviewCount: insertProduct.reviewCount ?? 0,
       specifications: insertProduct.specifications ?? null,
       features: insertProduct.features ?? null,
+      isFeatured: insertProduct.isFeatured ?? false,
+      isNew: insertProduct.isNew ?? false,
+      isOnSale: insertProduct.isOnSale ?? false,
       id,
       createdAt: new Date()
     };
@@ -308,7 +314,11 @@ export class MemStorage implements IStorage {
   async createOrder(insertOrder: InsertOrder): Promise<Order> {
     const id = randomUUID();
     const order: Order = { 
-      ...insertOrder, 
+      ...insertOrder,
+      status: insertOrder.status ?? "pending",
+      shippingAddress: insertOrder.shippingAddress ?? null,
+      paymentMethod: insertOrder.paymentMethod ?? null,
+      trackingNumber: insertOrder.trackingNumber ?? null,
       id,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -337,7 +347,11 @@ export class MemStorage implements IStorage {
 
   async createOrderItem(insertOrderItem: InsertOrderItem): Promise<OrderItem> {
     const id = randomUUID();
-    const orderItem: OrderItem = { ...insertOrderItem, id };
+    const orderItem: OrderItem = { 
+      ...insertOrderItem,
+      productImage: insertOrderItem.productImage ?? null,
+      id 
+    };
     this.orderItems.set(id, orderItem);
     return orderItem;
   }
