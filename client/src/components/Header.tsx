@@ -1,81 +1,66 @@
 import { ShoppingCart, Search, User, Heart, Menu } from "lucide-react";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchProducts, setFilters } from "@/store/slices/productsSlice";
 
 interface HeaderProps {
   cartItemCount?: number;
   onCartClick?: () => void;
-  onMenuClick?: () => void;
 }
 
-export default function Header({ cartItemCount = 0, onCartClick, onMenuClick }: HeaderProps) {
+export default function Header({ cartItemCount = 0, onCartClick }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [category, setCategory] = useState("all");
+  const [, setLocation] = useLocation();
+  const dispatch = useAppDispatch();
+  const { items: favorites } = useAppSelector((state) => state.favorites);
 
   const handleSearch = () => {
-    console.log("Search triggered:", { query: searchQuery, category });
+    if (searchQuery.trim()) {
+      dispatch(setFilters({ search: searchQuery }));
+      dispatch(fetchProducts({ search: searchQuery }));
+      setLocation("/products");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
-      <div className="bg-muted px-4 py-2 text-center text-sm">
-        <span className="text-muted-foreground">Welcome to Market Store!</span>
-        <span className="ml-4 text-foreground">Free shipping on orders over $50</span>
+      <div className="bg-primary px-4 py-2 text-center text-sm">
+        <span className="text-primary-foreground">Welcome to MobileTech Store!</span>
+        <span className="ml-4 text-primary-foreground/90">Free shipping on orders over $50</span>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-4">
         <div className="flex items-center justify-between gap-4">
-          <Button
-            size="icon"
-            variant="ghost"
-            className="md:hidden"
-            onClick={onMenuClick}
-            data-testid="button-menu"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary">
-              <ShoppingCart className="h-6 w-6 text-primary-foreground" />
+          <Link href="/">
+            <div className="flex items-center gap-2 cursor-pointer">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary">
+                <ShoppingCart className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <span className="font-display text-xl font-bold md:text-2xl">
+                <span className="text-foreground">MOBILE</span>
+                <span className="text-primary">TECH</span>
+              </span>
             </div>
-            <span className="font-display text-xl font-bold md:text-2xl">
-              <span className="text-secondary">FLEX</span>
-              <span className="text-primary">TECH</span>
-            </span>
-          </div>
+          </Link>
 
           <div className="hidden flex-1 md:flex md:max-w-2xl md:items-center md:gap-2">
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-[140px]" data-testid="select-category">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="phones">Phones</SelectItem>
-                <SelectItem value="laptops">Laptops</SelectItem>
-                <SelectItem value="headphones">Headphones</SelectItem>
-                <SelectItem value="smartwatches">Smartwatches</SelectItem>
-                <SelectItem value="cameras">Cameras</SelectItem>
-              </SelectContent>
-            </Select>
-
             <div className="relative flex-1">
               <Input
                 type="search"
                 placeholder="Search for products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                onKeyDown={handleKeyPress}
                 className="pr-10"
                 data-testid="input-search"
               />
@@ -91,14 +76,24 @@ export default function Header({ cartItemCount = 0, onCartClick, onMenuClick }: 
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              size="icon"
-              variant="ghost"
-              className="hidden md:flex"
-              data-testid="button-wishlist"
-            >
-              <Heart className="h-5 w-5" />
-            </Button>
+            <Link href="/favorites">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="hidden md:flex relative"
+                data-testid="button-wishlist"
+              >
+                <Heart className="h-5 w-5" />
+                {favorites.length > 0 && (
+                  <Badge
+                    className="absolute -right-1 -top-1 h-5 min-w-5 justify-center px-1 text-xs"
+                    data-testid="badge-favorites-count"
+                  >
+                    {favorites.length}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
             <Button
               size="icon"
               variant="ghost"
@@ -134,7 +129,7 @@ export default function Header({ cartItemCount = 0, onCartClick, onMenuClick }: 
               placeholder="Search for products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              onKeyDown={handleKeyPress}
               className="pr-10"
               data-testid="input-search-mobile"
             />
@@ -153,24 +148,31 @@ export default function Header({ cartItemCount = 0, onCartClick, onMenuClick }: 
       <nav className="hidden border-t border-border bg-muted/30 md:block">
         <div className="mx-auto max-w-7xl px-4">
           <div className="flex items-center justify-center gap-6 py-3">
-            <Button variant="ghost" size="sm" data-testid="nav-home">
-              HOME
-            </Button>
-            <Button variant="ghost" size="sm" data-testid="nav-shop">
-              SHOP
-            </Button>
-            <Button variant="ghost" size="sm" data-testid="nav-features">
-              FEATURES
-            </Button>
-            <Button variant="ghost" size="sm" data-testid="nav-about">
-              ABOUT US
-            </Button>
-            <Button variant="ghost" size="sm" data-testid="nav-contact">
-              CONTACT US
-            </Button>
-            <Button variant="ghost" size="sm" data-testid="nav-blog">
-              BLOG
-            </Button>
+            <Link href="/">
+              <Button variant="ghost" size="sm" data-testid="nav-home">
+                HOME
+              </Button>
+            </Link>
+            <Link href="/products">
+              <Button variant="ghost" size="sm" data-testid="nav-products">
+                PRODUCTS
+              </Button>
+            </Link>
+            <Link href="/deals">
+              <Button variant="ghost" size="sm" data-testid="nav-deals">
+                DEALS
+              </Button>
+            </Link>
+            <Link href="/favorites">
+              <Button variant="ghost" size="sm" data-testid="nav-favorites">
+                FAVORITES
+              </Button>
+            </Link>
+            <Link href="/contact">
+              <Button variant="ghost" size="sm" data-testid="nav-contact">
+                CONTACT US
+              </Button>
+            </Link>
           </div>
         </div>
       </nav>
