@@ -71,26 +71,26 @@ export default function Header({ cartItemCount = 0, onCartClick }: HeaderProps) 
           </Link>
 
           <div className="hidden flex-1 md:flex md:max-w-2xl md:items-center md:gap-2">
-            <div className="relative flex-1">
-              <Input
-                type="search"
-                placeholder="Search for products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={handleKeyPress}
-                className="pr-10"
-                data-testid="input-search"
-              />
-              <Button
-                size="icon"
-                className="absolute right-0 top-0"
-                onClick={handleSearch}
-                data-testid="button-search"
-              >
-                <Search className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+  <div className="flex flex-1 items-center gap-2">
+    <Input
+      type="search"
+      placeholder="Search for products..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      onKeyDown={handleKeyPress}
+      className="flex-1"
+      data-testid="input-search"
+    />
+    <Button
+      size="icon"
+      onClick={handleSearch}
+      data-testid="button-search"
+    >
+      <Search className="h-4 w-4" />
+    </Button>
+  </div>
+</div>
+
 
           <div className="flex items-center gap-2">
             <Link href="/favorites">
