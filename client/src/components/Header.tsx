@@ -1,11 +1,18 @@
-import { ShoppingCart, Search, User, Heart, Menu } from "lucide-react";
+import { ShoppingCart, Search, User, Heart, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchProducts, setFilters } from "@/store/slices/productsSlice";
+import { fetchCategories } from "@/store/slices/categoriesSlice";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface HeaderProps {
   cartItemCount?: number;
@@ -17,6 +24,13 @@ export default function Header({ cartItemCount = 0, onCartClick }: HeaderProps) 
   const [, setLocation] = useLocation();
   const dispatch = useAppDispatch();
   const { items: favorites } = useAppSelector((state) => state.favorites);
+  const { items: categories } = useAppSelector((state) => state.categories);
+
+  useEffect(() => {
+    if (categories.length === 0) {
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, categories.length]);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -31,6 +45,9 @@ export default function Header({ cartItemCount = 0, onCartClick }: HeaderProps) 
       handleSearch();
     }
   };
+
+  // Get top-level categories (no parent)
+  const topCategories = categories.filter(cat => !cat.parentId);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
@@ -154,6 +171,27 @@ export default function Header({ cartItemCount = 0, onCartClick }: HeaderProps) 
                 HOME
               </Button>
             </Link>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" data-testid="nav-categories">
+                  CATEGORIES
+                  <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-56">
+                {topCategories.map((category) => (
+                  <DropdownMenuItem key={category.id} asChild>
+                    <Link href={`/category/${category.slug}`}>
+                      <button className="w-full text-left" data-testid={`nav-category-${category.slug}`}>
+                        {category.name}
+                      </button>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <Link href="/products">
               <Button variant="ghost" size="sm" data-testid="nav-products">
                 PRODUCTS
