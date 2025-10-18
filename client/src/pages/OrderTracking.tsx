@@ -82,7 +82,6 @@ export default function OrderTracking() {
     <div className="min-h-screen bg-background">
       <Header 
         cartItemCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
-        onCartClick={() => {}}
       />
 
       <div className="container mx-auto px-4 py-12">
