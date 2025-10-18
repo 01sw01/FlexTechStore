@@ -11,6 +11,7 @@ import Deals from "@/pages/Deals";
 import Favorites from "@/pages/Favorites";
 import Contact from "@/pages/Contact";
 import OrderTracking from "@/pages/OrderTracking";
+import Cart from "@/pages/Cart";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/favorites" component={Favorites} />
       <Route path="/contact" component={Contact} />
       <Route path="/orders" component={OrderTracking} />
+      <Route path="/cart" component={Cart} />
       <Route component={NotFound} />
     </Switch>
   );

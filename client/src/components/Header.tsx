@@ -35,19 +35,19 @@ export default function Header({ cartItemCount = 0, onCartClick }: HeaderProps) 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
       <div className="bg-primary px-4 py-2 text-center text-sm">
-        <span className="text-primary-foreground">Welcome to MobileTech Store!</span>
+        <span className="text-primary-foreground">Welcome to FlexTech Store!</span>
         <span className="ml-4 text-primary-foreground/90">Free shipping on orders over $50</span>
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           <Link href="/">
-            <div className="flex items-center gap-2 cursor-pointer">
+            <div className="flex items-center gap-2 cursor-pointer" data-testid="logo-header">
               <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary">
                 <ShoppingCart className="h-6 w-6 text-primary-foreground" />
               </div>
               <span className="font-display text-xl font-bold md:text-2xl">
-                <span className="text-foreground">MOBILE</span>
+                <span className="text-foreground">FLEX</span>
                 <span className="text-primary">TECH</span>
               </span>
             </div>
@@ -102,23 +102,24 @@ export default function Header({ cartItemCount = 0, onCartClick }: HeaderProps) 
             >
               <User className="h-5 w-5" />
             </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              className="relative"
-              onClick={onCartClick}
-              data-testid="button-cart"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              {cartItemCount > 0 && (
-                <Badge
-                  className="absolute -right-1 -top-1 h-5 min-w-5 justify-center px-1 text-xs"
-                  data-testid="badge-cart-count"
-                >
-                  {cartItemCount}
-                </Badge>
-              )}
-            </Button>
+            <Link href="/cart">
+              <Button
+                size="icon"
+                variant="ghost"
+                className="relative"
+                data-testid="button-cart"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                {cartItemCount > 0 && (
+                  <Badge
+                    className="absolute -right-1 -top-1 h-5 min-w-5 justify-center px-1 text-xs"
+                    data-testid="badge-cart-count"
+                  >
+                    {cartItemCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
           </div>
         </div>
 
