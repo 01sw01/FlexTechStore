@@ -43,32 +43,34 @@ export default function OrderTracking() {
     {
       id: "1",
       userId: "user-1",
-      items: [],
       status: "delivered",
       total: "299.99",
       shippingAddress: "123 Main St, Apt 4B",
+      paymentMethod: null,
       createdAt: new Date("2024-10-10"),
+      updatedAt: new Date("2024-10-10"),
       trackingNumber: "TRK123456789"
     },
     {
       id: "2",
       userId: "user-1",
-      items: [],
       status: "shipped",
       total: "549.99",
       shippingAddress: "123 Main St, Apt 4B",
+      paymentMethod: null,
       createdAt: new Date("2024-10-15"),
-      trackingNumber: "TRK987654321",
-      estimatedDelivery: new Date("2024-10-20")
+      updatedAt: new Date("2024-10-15"),
+      trackingNumber: "TRK987654321"
     },
     {
       id: "3",
       userId: "user-1",
-      items: [],
       status: "processing",
       total: "199.99",
       shippingAddress: "123 Main St, Apt 4B",
+      paymentMethod: null,
       createdAt: new Date("2024-10-16"),
+      updatedAt: new Date("2024-10-16"),
       trackingNumber: "TRK456789123"
     }
   ];
@@ -117,11 +119,6 @@ export default function OrderTracking() {
               <p className="text-sm text-muted-foreground">
                 Tracking: {searchedOrder.trackingNumber}
               </p>
-              {searchedOrder.estimatedDelivery && (
-                <p className="text-sm text-muted-foreground">
-                  Estimated delivery: {new Date(searchedOrder.estimatedDelivery).toLocaleDateString()}
-                </p>
-              )}
             </div>
           )}
         </Card>
@@ -159,7 +156,7 @@ export default function OrderTracking() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Shipping Address:</span>
-                  <span className="font-medium">{order.shippingAddress}</span>
+                  <span className="font-medium">{String(order.shippingAddress)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Total:</span>
@@ -167,14 +164,6 @@ export default function OrderTracking() {
                     ${order.total}
                   </span>
                 </div>
-                {order.estimatedDelivery && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Estimated Delivery:</span>
-                    <span className="font-medium">
-                      {new Date(order.estimatedDelivery).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
               </div>
 
               <div className="mt-4 flex gap-2">
