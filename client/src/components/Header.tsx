@@ -81,6 +81,7 @@ export default function Header({ cartItemCount = 0, onCartClick }: HeaderProps) 
       className="flex-1"
       data-testid="input-search"
     />
+
     <Button
       size="icon"
       onClick={handleSearch}
