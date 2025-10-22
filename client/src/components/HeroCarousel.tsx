@@ -58,12 +58,14 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="relative h-[50vh] w-full overflow-hidden md:h-[60vh]">
+  <div className="relative h-[50vh] w-full overflow-hidden md:h-[60vh]">
+    {/* Slides - Lower z-index */}
+    <div className="absolute inset-0 z-0">
       {slides.map((slide, index) => (
         <div
           key={slide.id}
           className={`absolute inset-0 transition-opacity duration-500 ${
-            index === currentSlide ? "opacity-100" : "opacity-0"
+            index === currentSlide ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
           <div className={`h-full w-full bg-gradient-to-r ${slide.bgColor}`}>
@@ -85,39 +87,39 @@ export default function HeroCarousel() {
           </div>
         </div>
       ))}
-
-      <Button
-        size="icon"
-        variant="ghost"
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/20 text-white backdrop-blur-sm hover:bg-black/40"
-        onClick={prevSlide}
-        data-testid="button-prev-slide"
-      >
-        <ChevronLeft className="h-6 w-6" />
-      </Button>
-
-      <Button
-        size="icon"
-        variant="ghost"
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/20 text-white backdrop-blur-sm hover:bg-black/40"
-        onClick={nextSlide}
-        data-testid="button-next-slide"
-      >
-        <ChevronRight className="h-6 w-6" />
-      </Button>
-
-      <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`h-2 rounded-full transition-all ${
-              index === currentSlide ? "w-8 bg-primary" : "w-2 bg-white/50"
-            }`}
-            data-testid={`button-dot-${index}`}
-          />
-        ))}
-      </div>
     </div>
-  );
+
+    {/* Navigation Buttons - Higher z-index */}
+    {/* Navigation Buttons */}
+<button
+  className="absolute left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-md bg-black/20 text-white backdrop-blur-sm hover:bg-black/40"
+  onClick={prevSlide}
+  data-testid="button-prev-slide"
+>
+  <ChevronLeft className="h-6 w-6" />
+</button>
+
+<button
+  className="absolute right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-md bg-black/20 text-white backdrop-blur-sm hover:bg-black/40"
+  onClick={nextSlide}
+  data-testid="button-next-slide"
+>
+  <ChevronRight className="h-6 w-6" />
+</button>
+
+    {/* Dots Indicator - Higher z-index */}
+    <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+      {slides.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => goToSlide(index)}
+          className={`h-2 rounded-full transition-all ${
+            index === currentSlide ? "w-8 bg-primary" : "w-2 bg-white/50"
+          }`}
+          data-testid={`button-dot-${index}`}
+        />
+      ))}
+    </div>
+  </div>
+);
 }
